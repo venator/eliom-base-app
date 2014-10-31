@@ -34,10 +34,10 @@ module type PAGE = sig
   val other_head : [ Html5_types.head_content_fun ] Eliom_content.Html5.elt list
   val default_error_page :
     'a -> 'b -> exn ->
-    [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t
+    [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t
   val default_connected_error_page :
     int64 option -> 'a -> 'b -> exn ->
-    [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t
+    [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t
   val default_predicate : 'a -> 'b -> bool Lwt.t
   val default_connected_predicate : int64 option -> 'a -> 'b -> bool Lwt.t
 end
@@ -60,7 +60,7 @@ module Default_config = struct
         p [pcdata "You must be connected to see this page."]::de
       | _ -> de
     in
-    Lwt.return [div ~a:[a_class ["errormsg"]] (h2 [pcdata "Error"]::l)]
+    Lwt.return (body [div ~a:[a_class ["errormsg"]] (h2 [pcdata "Error"]::l)])
 
   let default_predicate _ _ = Lwt.return true
   let default_connected_predicate _ _ _ = Lwt.return true
@@ -81,10 +81,10 @@ module Make(C : PAGE) = struct
       (fun jsname -> ("js"::jsname))
       C.js
 
-  let make_page content =
+  let make_page body_elt =
     html
       (Eliom_tools.F.head ~title:C.title ~css ~js ~other:C.other_head ())
-      (body content)
+      body_elt
 
   let page
       ?(predicate = C.default_predicate)

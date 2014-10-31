@@ -49,12 +49,12 @@ module type PAGE = sig
   (** Default error page. *)
   val default_error_page :
     'a -> 'b -> exn ->
-    [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t
+    [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t
 
   (** Default error page for connected pages. *)
   val default_connected_error_page :
     int64 option -> 'a -> 'b -> exn ->
-    [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t
+    [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t
 
   (** Default predicate. *)
   val default_predicate : 'a -> 'b -> bool Lwt.t
@@ -71,7 +71,7 @@ module Make (C : PAGE) : sig
   (** Builds a valid html page from body content by adding headers
       for this app *)
   val make_page :
-    [< Html5_types.body_content ] Eliom_content.Html5.elt list ->
+    [< Html5_types.body ] Eliom_content.Html5.elt ->
     [> Html5_types.html ] Eliom_content.Html5.elt
 
   (** Default wrapper for service handler generating pages.
@@ -87,10 +87,9 @@ module Make (C : PAGE) : sig
   val page :
     ?predicate:('a -> 'b -> bool Lwt.t) ->
     ?fallback:('a -> 'b -> exn ->
-               [ Html5_types.body_content ] Eliom_content.Html5.elt
-                 list Lwt.t) ->
+               [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t) ->
     ('a -> 'b ->
-     [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t) ->
+     [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t) ->
     ('a -> 'b -> [ Html5_types.html ] Eliom_content.Html5.elt Lwt.t)
 
 
@@ -103,10 +102,9 @@ module Make (C : PAGE) : sig
       ?deny:Eba_group.t list ->
       ?predicate:(int64 option -> 'a -> 'b -> bool Lwt.t) ->
       ?fallback:(int64 option -> 'a -> 'b -> exn ->
-                 [ Html5_types.body_content ] Eliom_content.Html5.elt
-                   list Lwt.t) ->
+                 [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t) ->
       (int64 option -> 'a -> 'b ->
-       [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t) ->
+       [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t) ->
       ('a -> 'b -> [ Html5_types.html ] Eliom_content.Html5.elt Lwt.t)
 
   end
@@ -119,10 +117,9 @@ module Make (C : PAGE) : sig
     -> ?deny:Eba_group.t list
     -> ?predicate:(int64 option -> 'a -> 'b -> bool Lwt.t)
     -> ?fallback:(int64 option -> 'a -> 'b -> exn ->
-                  [ Html5_types.body_content ] Eliom_content.Html5.elt list
-                    Lwt.t)
+                  [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t)
     -> (int64 -> 'a -> 'b ->
-        [ Html5_types.body_content ] Eliom_content.Html5.elt list Lwt.t)
+        [ Html5_types.body ] Eliom_content.Html5.elt Lwt.t)
     -> 'a -> 'b
     -> [ Html5_types.html ] Eliom_content.Html5.elt Lwt.t
 
